@@ -15,21 +15,17 @@ def health_check():
     return "Health check passed", 200
 
 def start(update: Update, context: CallbackContext) -> None:
-    channels = CHANNEL_IDS  # Assuming CHANNEL_IDS is pre-populated with channel IDs
-    keyboard = [[InlineKeyboardButton(f"Channel {i+1}", callback_data=f'channel_{i}')] for i in range(len(channels))]
+    keyboard = [[InlineKeyboardButton("Add Channel", callback_data='add_channel')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    update.message.reply_text('Select the channel to send posts to:', reply_markup=reply_markup)
+    update.message.reply_text('Click the button to add a channel:', reply_markup=reply_markup)
 
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
     data = query.data
 
-    if data.startswith('channel_'):
-        channel_index = int(data.split('_')[1])
-        channel_id = CHANNEL_IDS[channel_index]
-        query.edit_message_text(text=f"Channel selected: {channel_id}. Now send the post (text, image, video).")
-        context.user_data['selected_channel'] = channel_id
+    if data == 'add_channel':
+        query.edit_message_text(text="Please send the last message from the channel you want to add.")
 
 def add_channel(update: Update, context: CallbackContext) -> None:
     channel_id = update.message.forward_from_chat.id
@@ -70,7 +66,10 @@ def add_urls(update: Update, context: CallbackContext) -> None:
     buttons = [[InlineKeyboardButton(name, url=link)] for name, link in (url.split() for url in urls)]
 
     if selected_channel:
-        update.message.bot.send_message(chat_id=selected_channel, text=post.text, reply_markup=InlineKeyboardMarkup(buttons))
+        if post.photo:
+            update.message.bot.send_photo(chat_id=selected_channel, photo=post.photo[-1].file_id, caption=post.caption, reply_markup=InlineKeyboardMarkup(buttons))
+        else:
+            update.message.bot.send_message(chat_id=selected_channel, text=post.text, reply_markup=InlineKeyboardMarkup(buttons))
         update.message.reply_text("Post sent to the channel.")
     else:
         update.message.reply_text("No channel selected.")
