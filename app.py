@@ -1,13 +1,16 @@
+import os
 from flask import Flask
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, CallbackContext
-import os
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Replace with your actual bot token
+# Retrieve the bot token from environment variables
 BOT_TOKEN = os.getenv('8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94')
+if not BOT_TOKEN:
+    raise ValueError('BOT_TOKEN environment variable not set')
+
 CHANNEL_IDS = []  # List to store channel IDs
 
 @app.route('/')
@@ -22,7 +25,6 @@ def start(update: Update, context: CallbackContext) -> None:
 def button(update: Update, context: CallbackContext) -> None:
     query = update.callback_query
     query.answer()
-
     if query.data == 'start':
         query.edit_message_text(text="Please select the channel to send posts to and send the last message of the channel.")
 
@@ -47,7 +49,6 @@ def handle_buttons(update: Update, context: CallbackContext) -> None:
     query.answer()
     user_data = context.user_data
     post = user_data.get('post')
-
     if query.data == 'delete_msg':
         post.delete()
         query.edit_message_text(text="Message deleted. Please send a new post.")
@@ -67,7 +68,6 @@ def add_urls(update: Update, context: CallbackContext) -> None:
 
 def main() -> None:
     updater = Updater(BOT_TOKEN)
-    
     dispatcher = updater.dispatcher
     dispatcher.add_handler(CommandHandler('start', start))
     dispatcher.add_handler(MessageHandler(Filters.forwarded & Filters.chat_type.channel, add_channel))
@@ -75,7 +75,6 @@ def main() -> None:
     dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CallbackQueryHandler(handle_buttons))
     dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex(r'^name\d+ link\d+'), add_urls))
-    
     updater.start_polling()
     updater.idle()
 
