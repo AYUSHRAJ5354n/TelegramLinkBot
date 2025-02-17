@@ -10,11 +10,14 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Make port 80 available to the world outside this container
-EXPOSE 80
+# Install Flask for health check
+RUN pip install Flask
+
+# Make port 8080 available to the world outside this container
+EXPOSE 8080
 
 # Define environment variable
 ENV BOT_TOKEN=8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94
 
-# Run bot.py when the container launches
-CMD ["python", "bot.py"]
+# Run the Flask app and bot.py when the container launches
+CMD ["python", "app.py"]
