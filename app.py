@@ -28,10 +28,13 @@ def button(update: Update, context: CallbackContext) -> None:
         query.edit_message_text(text="Please send the last message from the channel you want to add.")
 
 def add_channel(update: Update, context: CallbackContext) -> None:
-    channel_id = update.message.forward_from_chat.id
-    if channel_id not in CHANNEL_IDS:
-        CHANNEL_IDS.append(channel_id)
-    update.message.reply_text(f"Channel added: {channel_id}. Now send the post (text, image, video).")
+    if update.message.forward_from_chat:
+        channel_id = update.message.forward_from_chat.id
+        if channel_id not in CHANNEL_IDS:
+            CHANNEL_IDS.append(channel_id)
+        update.message.reply_text(f"Channel added: {channel_id}. Now send the post (text, image, video).")
+    else:
+        update.message.reply_text("Please forward the last message from the channel you want to add.")
 
 def handle_post(update: Update, context: CallbackContext) -> None:
     user_data = context.user_data
