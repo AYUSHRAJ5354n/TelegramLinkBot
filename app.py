@@ -6,10 +6,8 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Callb
 # Initialize Flask app
 app = Flask(__name__)
 
-# Retrieve the bot token from environment variables
-BOT_TOKEN = os.getenv('8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94')
-if not BOT_TOKEN:
-    raise ValueError('BOT_TOKEN environment variable not set')
+# Use the provided bot token
+BOT_TOKEN = '8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94'
 
 CHANNEL_IDS = []  # List to store channel IDs
 
@@ -74,7 +72,7 @@ def main() -> None:
     dispatcher.add_handler(MessageHandler(Filters.text & ~Filters.command, handle_post))
     dispatcher.add_handler(CallbackQueryHandler(button))
     dispatcher.add_handler(CallbackQueryHandler(handle_buttons))
-    dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex(r'^name\d+ link\d+'), add_urls))
+    dispatcher.add_handler(MessageHandler(Filters.text & Filters.regex(r'^name\\d+ link\\d+'), add_urls))
     updater.start_polling()
     updater.idle()
 
