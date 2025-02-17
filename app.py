@@ -7,7 +7,7 @@ import os
 app = Flask(__name__)
 
 # Replace with your actual bot token
-BOT_TOKEN = os.getenv('8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94')
+BOT_TOKEN = '8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94'
 CHANNEL_IDS = []  # List to store channel IDs
 
 @app.route('/')
