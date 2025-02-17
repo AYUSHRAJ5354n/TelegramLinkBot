@@ -37,6 +37,8 @@ def add_channel(update: Update, context: CallbackContext) -> None:
         update.message.reply_text("Please forward the last message from the channel you want to add.")
 
 def handle_post(update: Update, context: CallbackContext) -> None:
+    if context.user_data is None:
+        context.user_data = {}
     user_data = context.user_data
     user_data['post'] = update.message
     keyboard = [
