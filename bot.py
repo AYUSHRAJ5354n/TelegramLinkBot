@@ -2,7 +2,7 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, CallbackQueryHandler, CallbackContext
 
 # Replace with your actual bot token
-BOT_TOKEN = '8184177184:AAH0nl6KHpNixXRuIZwm0ubrQYEDoW-6R94'
+BOT_TOKEN = '8184177184:Aahk_FIONXSJKNVvjxyhj6R94578SGJMKKB'
 CHANNEL_IDS = []  # List to store channel IDs
 
 def start(update: Update, context: CallbackContext) -> None:
